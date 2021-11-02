@@ -1,14 +1,17 @@
+#!/usr/bin/env python
+
 import sys
 import logging
 import argparse
-import regipy
+from regipy.registry import NKRecord, RegistryHive
+from regipy import convert_wintime
 
 g_logger = logging.getLogger("amcache2")
 
 
 class InventoryApplicationFileEntry:
-    def __init__(self, entry: regipy.registry.NKRecord):
-        self.__timestamp = regipy.convert_wintime(entry.header.last_modified, as_json=False)
+    def __init__(self, entry: NKRecord):
+        self.__timestamp = convert_wintime(entry.header.last_modified, as_json=False)
 
         for value in entry.iter_values():
             if value.name.lower() == 'lowercaselongpath':
@@ -66,7 +69,7 @@ def main(argv=None):
                         help="Path to the Amcache.hve hive to process")
     args = parser.parse_args(argv[1:])
 
-    hive = regipy.registry.RegistryHive(args.registry_hive)
+    hive = RegistryHive(args.registry_hive)
     for f in InventoryApplicationFileList(hive):
         print(str(f))
 
