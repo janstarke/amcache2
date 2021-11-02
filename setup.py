@@ -5,15 +5,15 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="amcache2",
-    version="0.1.3",
+    version="0.1.4",
     author="Jan Starke",
     author_email="jan.starke@t-systems.com",
     description="creates a bodyfile from AmCache.hve",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/janstarke/amcache2.py",
+    url="https://github.com/janstarke/amcache2",
     project_urls={
-        "Bug Tracker": "https://github.com/janstarke/amcache2.py/issues",
+        "Bug Tracker": "https://github.com/janstarke/amcache2/issues",
     },
     classifiers=[
         "Programming Language :: Python :: 3",
