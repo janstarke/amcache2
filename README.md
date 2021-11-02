@@ -2,7 +2,7 @@
 ![PyPI - License](https://img.shields.io/pypi/l/amcache2)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/amcache2)
 
-# amcache2.py
+# amcache2
 creates a bodyfile from AmCache.hve
 
 ## Installation
