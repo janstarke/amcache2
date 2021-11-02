@@ -1,15 +1,10 @@
 import sys
 import logging
-import datetime
-from collections import namedtuple
-
 import argparse
 import regipy
 
 g_logger = logging.getLogger("amcache2")
 
-class NotAnAmcacheHive(Exception):
-    pass
 
 class InventoryApplicationFileEntry:
     def __init__(self, entry: regipy.registry.NKRecord):
@@ -20,21 +15,31 @@ class InventoryApplicationFileEntry:
                 self.__lower_case_long_path = value.value
             elif value.name.lower() == 'originalfilename':
                 self.__original_filename = value.value
+            elif value.name.lower() == 'name':
+                self.__name = value.value
+            elif value.name.lower() == 'size':
+                self.__size = value.value
+
+        if self.__name.lower() == str(self.__original_filename).lower():
+            self.__displayname = self.__lower_case_long_path
+        else:
+            self.__displayname = "%s (%s) "% (self.__lower_case_long_path, self.__original_filename)
 
     def __str__(self):
         return "{MD5}|{name}|{inode}|{mode_as_string}|{UID}|{GID}|{size}|{atime}|{mtime}|{ctime}|{crtime}".format(
             MD5 = "0",
-            name = ("%s (%s) "% (self.__lower_case_long_path, self.__original_filename)),
+            name = self.__displayname,
             inode = "0",
             mode_as_string = "0",
             UID = "0",
             GID = "0",
-            size = "0",
+            size = self.__size,
             atime = "-1",
             mtime = self.__timestamp.strftime('%s'),
             ctime = "-1",
             crtime = "-1"
         )
+
 
 class InventoryApplicationFileList:
     def __init__(self, hive):
@@ -51,10 +56,6 @@ class InventoryApplicationFileList:
         return self.__files.__iter__()
 
 
-def parse_execution_entries(hive):
-    for f in InventoryApplicationFileList(hive):
-        print(str(f))
-
 def main(argv=None):
     if argv is None:
         argv = sys.argv
@@ -66,11 +67,8 @@ def main(argv=None):
     args = parser.parse_args(argv[1:])
 
     hive = regipy.registry.RegistryHive(args.registry_hive)
-    try:
-        ee = parse_execution_entries(hive)
-    except NotAnAmcacheHive:
-        g_logger.error("doesn't appear to be an Amcache.hve hive")
-        return
+    for f in InventoryApplicationFileList(hive):
+        print(str(f))
 
 
 if __name__ == "__main__":
